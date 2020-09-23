@@ -1,4 +1,4 @@
 # my_website
 
 Hello world!
-262%
+\n 262%
