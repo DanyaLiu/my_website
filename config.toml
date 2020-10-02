@@ -139,7 +139,7 @@ disqusShortname = ""
   [params.two]
     enable = true
     title = "My life"
-    subtitle = """If you want to more about me."""
+    subtitle = """If you want to know more about me."""
     buttonText = "Get Started"
     url = "blogs"
 
