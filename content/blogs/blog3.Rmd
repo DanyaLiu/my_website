@@ -1,14 +1,14 @@
 ---
-title: "My travel journey of America"
-date: '2020-10-14'
-description: Winter in USA
-draft: no
-image: "NBA01.jpeg"
-keywords: ''
-slug: blog3
 categories:
-- ''
-- ''
+- ""
+- ""
+date: "2020-10-14"
+description:  ''
+draft: false
+image: NBA01.jpeg
+keywords: ""
+slug: blog2
+title: My travel journey of America
 ---
 
 In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week! 
