@@ -1,9 +1,9 @@
 ---
 date: "2020-10-14"
 draft: false
-image: pic02.jpg
+image: pic06.jpg
 slug: blogs
-title: Lifestyle
+title: Projects
 ---
 
 My blogs about technology and lifestyle.

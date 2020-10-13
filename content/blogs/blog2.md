@@ -2,11 +2,13 @@
 categories:
 - ""
 - ""
-date: "2017-10-31T22:26:09-05:00"
-description: Lorem Etiam Nullam
+date: "2020-10-14"
+description: Summer in Greece
 draft: false
-image: pic09.jpg
+image: greece01.jpeg
 keywords: ""
-slug: magna
-title: Magna
+slug: blog2
+title: My travel journey of Greece
 ---
+
+I spent my summer of 2018 in Greece. I love Athens, Santorini, and Thira. Hope one day I can go there another time!
