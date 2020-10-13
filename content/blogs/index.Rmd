@@ -1,9 +1,9 @@
 ---
-date: "2020-10-14"
-draft: false
-image: pic02.jpg
+title: "Lifestyle"
+draft: no
+date: '2020-10-14'
 slug: blogs
-title: Lifestyle
+image: pic02.jpg
 ---
 
 My blogs about technology and lifestyle.
