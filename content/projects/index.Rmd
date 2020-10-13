@@ -2,8 +2,8 @@
 date: "2020-10-14"
 draft: false
 image: pic06.jpg
-slug: blogs
-title: Projects
+slug: projects
+title: "Projects"
 ---
 
 My blogs about technology and lifestyle.
