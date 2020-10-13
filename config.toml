@@ -143,6 +143,13 @@ disqusShortname = ""
     buttonText = "Get Started"
     url = "blogs"
 
+  # Section Type Two
+  [params.two]
+    enable = true
+    title = "My project 1"
+    subtitle = """This is my project 1."""
+    buttonText = "Get Started"
+    url = "project1"
 
   # Contact section
   [params.contact]
