@@ -1,0 +1,162 @@
+---
+title: "Multi-Factor Models and Performance Evaluation"
+date: '2020-10-14'
+description: ''
+draft: no
+image: pj4.jpg
+keywords: ''
+slug: "pj4"
+categories:
+- ''
+- ''
+---
+
+```{r, setup, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)    # scrape websites
+library(purrr)  
+library(lubridate) #to handle dates
+library(readxl)
+library(mosaic)
+library(huxtable)
+```
+
+# Instruction
+
+Evaluating the performance of Goldman Sachs and DFA over the period from January 2000 through December 2004. The data for the Fama-French portfolios are taken from [Ken French’s website](http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/)
+
+# Load data
+```{r}
+
+multi_factor_models  <-  read_excel(here::here("data","Problem_Set_4_data.xls"), # Excel filename
+                   sheet="Question 5", # Sheet name
+                   skip=4) # Number of rows to skip
+
+#clean name
+multi_factor_models = multi_factor_models %>% 
+  rename("GOLDMAN"="GOLDMAN...11",
+         "DFA"="DFA...12",
+         "SMB"="SMB...15",
+         "mkt_rf"="Mkt - Rf...14",
+         "HML"="HML...16",
+         "MOM"="MOM...17",
+         "rf"="Rf...18") %>% 
+  select("MONTH",
+         "GOLDMAN",
+         "DFA",
+         "SMB",
+         "mkt_rf",
+         "HML",
+         "MOM",
+         "rf")
+```
+
+
+# Summarize the returns data for each of the funds
+```{r}
+favstats(~GOLDMAN, data = multi_factor_models)
+favstats(~DFA, data = multi_factor_models)
+```
+
+**DFA performed better as it has higher mean and lower std**
+
+#CAPM model
+```{r}
+#GOLDMAN
+model_multi_factor_models_GOLDMAN=lm(I(GOLDMAN-rf)~ mkt_rf, data= multi_factor_models)
+
+#DFA
+model_multi_factor_models_DFA=lm(I(DFA-rf)~ mkt_rf, data= multi_factor_models)
+
+#table together
+huxreg(model_multi_factor_models_GOLDMAN, model_multi_factor_models_DFA,
+       statistics = c('#observations' = 'nobs', 
+                      'R squared' = 'r.squared', 
+                      'Adj. R Squared' = 'adj.r.squared', 
+                      'Residual SE' = 'sigma'), 
+       bold_signif = 0.05, 
+       stars = c(`***` = 0.001, `**` = 0.01, `*`=0.05)) %>% 
+  set_caption('CAPM') %>% 
+  set_contents(1,2,"GOLDMAN") %>% 
+  set_contents(1,3,"DFA")
+
+```
+
+**Using CAPM, GOLDMAN’s alpha is higher**
+
+
+#3-factor model
+```{r}
+#GOLDMAN
+model_multi_factor_models_GOLDMAN_2=lm(I(GOLDMAN-rf)~ mkt_rf + SMB + HML, data= multi_factor_models)
+
+#DFA
+model_multi_factor_models_DFA_2=lm(I(DFA-rf)~ mkt_rf + SMB + HML, data= multi_factor_models)
+
+#table together
+huxreg(model_multi_factor_models_GOLDMAN_2, model_multi_factor_models_DFA_2,
+       statistics = c('#observations' = 'nobs', 
+                      'R squared' = 'r.squared', 
+                      'Adj. R Squared' = 'adj.r.squared', 
+                      'Residual SE' = 'sigma'), 
+       bold_signif = 0.05, 
+       stars = c(`***` = 0.001, `**` = 0.01, `*`=0.05)) %>% 
+  set_caption('Fama-French 3-factor') %>% 
+  set_contents(1,2,"GOLDMAN") %>% 
+  set_contents(1,3,"DFA")
+
+```
+
+
+#4-factor model
+```{r}
+#GOLDMAN
+model_multi_factor_models_GOLDMAN_3=lm(I(GOLDMAN-rf)~ mkt_rf + SMB + HML + MOM, data= multi_factor_models)
+
+#DFA
+model_multi_factor_models_DFA_3=lm(I(DFA-rf)~ mkt_rf + SMB + HML +MOM, data= multi_factor_models)
+
+#table together
+huxreg(model_multi_factor_models_GOLDMAN_3, model_multi_factor_models_DFA_3,
+       statistics = c('#observations' = 'nobs', 
+                      'R squared' = 'r.squared', 
+                      'Adj. R Squared' = 'adj.r.squared', 
+                      'Residual SE' = 'sigma'), 
+       bold_signif = 0.05, 
+       stars = c(`***` = 0.001, `**` = 0.01, `*`=0.05)) %>% 
+  set_caption('Fama-French 4-factor') %>% 
+  set_contents(1,2,"GOLDMAN") %>% 
+  set_contents(1,3,"DFA")
+```
+
+#Conclusion
+**Using CAPM, GOLDMAN’s alpha is higher\n But when using Fama-French, their alphas are close to zero and GOLDMAN’s is higher\n The adjusted R squared is high and the factors are significant\n This means, compared to the same type of funds, both of them performed good**
+

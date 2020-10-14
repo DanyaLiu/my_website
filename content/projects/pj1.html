@@ -1,26 +1,221 @@
 ---
-title: "pj1"
-output: html_document
+title: "Where Do People Drink The Most Beer, Wine And Spirits?"
+date: '2020-10-14'
+description: ''
+draft: no
+image: alcohol02.jpg
+keywords: ''
+slug: "pj1"
+categories:
+- ''
+- ''
 ---
 
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<p>Back in 2014, <a href="https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/">fivethiryeight.com</a> published an article on alcohol consumption in different countries. The data <code>drinks</code> is available as part of the <code>fivethirtyeight</code> package.</p>
+<pre class="r"><code>library(fivethirtyeight)
+data(drinks)</code></pre>
+<pre class="r"><code>glimpse(drinks)</code></pre>
+<pre><code>## Rows: 193
+## Columns: 5
+## $ country                      &lt;chr&gt; &quot;Afghanistan&quot;, &quot;Albania&quot;, &quot;Algeria&quot;, &quot;An…
+## $ beer_servings                &lt;int&gt; 0, 89, 25, 245, 217, 102, 193, 21, 261, …
+## $ spirit_servings              &lt;int&gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, 75…
+## $ wine_servings                &lt;int&gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, 19…
+## $ total_litres_of_pure_alcohol &lt;dbl&gt; 0.0, 4.9, 0.7, 12.4, 5.9, 4.9, 8.3, 3.8,…</code></pre>
+<pre class="r"><code>skim(drinks)</code></pre>
+<table>
+<caption>(#tab:glimpse_skim_data)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">drinks</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">193</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">4</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">country</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="right">0</td>
+<td align="right">193</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beer_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">106.16</td>
+<td align="right">101.14</td>
+<td align="right">0</td>
+<td align="right">20.0</td>
+<td align="right">76.0</td>
+<td align="right">188.0</td>
+<td align="right">376.0</td>
+<td align="left">▇▃▂▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">spirit_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">80.99</td>
+<td align="right">88.28</td>
+<td align="right">0</td>
+<td align="right">4.0</td>
+<td align="right">56.0</td>
+<td align="right">128.0</td>
+<td align="right">438.0</td>
+<td align="left">▇▃▂▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">wine_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">49.45</td>
+<td align="right">79.70</td>
+<td align="right">0</td>
+<td align="right">1.0</td>
+<td align="right">8.0</td>
+<td align="right">59.0</td>
+<td align="right">370.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">total_litres_of_pure_alcohol</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4.72</td>
+<td align="right">3.77</td>
+<td align="right">0</td>
+<td align="right">1.3</td>
+<td align="right">4.2</td>
+<td align="right">7.2</td>
+<td align="right">14.4</td>
+<td align="left">▇▃▅▃▁</td>
+</tr>
+</tbody>
+</table>
+<div id="beer-consumption" class="section level2">
+<h2>Beer Consumption</h2>
+<pre class="r"><code>drinks %&gt;% 
+  slice_max(n=25,beer_servings) %&gt;% 
+  ggplot(mapping = aes(y = reorder(country,beer_servings), x = beer_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = &quot;Servings of beer&quot;,
+    y= &quot;&quot; ,
+    title = &quot;Top 25 beer consuming countries&quot;,
+    caption = &quot;Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/&quot;
+    ) + 
+    geom_text(aes(label = beer_servings), vjust=0.5, hjust=1, colour = &quot;white&quot;, position = position_dodge(.9), size = 3)</code></pre>
+<p><img src="/projects/pj1_files/figure-html/beer_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="/projects/pj1_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="wine-consumption" class="section level2">
+<h2>Wine Consumption</h2>
+<pre class="r"><code>drinks %&gt;% 
+  slice_max(n=25,wine_servings) %&gt;% 
+  ggplot(mapping = aes(y = reorder(country,wine_servings), x = wine_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = &quot;Servings of wine&quot;,
+    y= &quot;&quot; ,
+    title = &quot;Top 25 wine consuming countries&quot;,
+    caption = &quot;Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/&quot;
+    ) + 
+    geom_text(aes(label = wine_servings), vjust=0.5, hjust=1, colour = &quot;white&quot;, position = position_dodge(.9), size = 3)</code></pre>
+<p><img src="/projects/pj1_files/figure-html/wine_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="spirit-consumption" class="section level2">
+<h2>Spirit Consumption</h2>
+<pre class="r"><code>drinks %&gt;% 
+  slice_max(n=25,spirit_servings) %&gt;% 
+  ggplot(mapping = aes(y = reorder(country,spirit_servings), x = spirit_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = &quot;Servings of spirit&quot;,
+    y= &quot;&quot; ,
+    title = &quot;Top 25 spirit consuming countries&quot;,
+    caption = &quot;Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/&quot;
+    ) + 
+    geom_text(aes(label = spirit_servings), vjust=0.5, hjust=1, colour = &quot;white&quot;, position = position_dodge(.9), size = 3)</code></pre>
+<p><img src="/projects/pj1_files/figure-html/spirit_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p><strong>First of all , the top 5 countries across the three rankings (in total 15 countries) are all different from each other, and the countries that show up in more than one ranking are few and far between. This means that the drinks preference varies wildly across different countries, and usually, one country clearly prefers one kind of drink to others. For instance, beer clearly dominates countries like Germany and Czech Republic, known for their beer production and culture. Wine is also dominated by other European countries, as the top 9 wine consuming countries are European countries. Clearly the French, known for their wine regions such as Bordeaux, Alsace, Burgundy and Champagne, and low wine prices, consume far more wine than people in any other countries, 370 glasses of wine per person per year, 31 glasses more than No.2 country.</strong></p>
+<p><strong>While looking at the top 25 spirit consuming countries, you find primarily Eastern European countries as well as a at first glance surprising amount of Caribbean countries (Grenada, St Lucia, St Vincent etc.), these are countries known for the production of vodka or rum. The high amount of consumption in Eastern Europe is both as result of a the poorer climate not suitable to grow grapes for example and grounded in the historic aftermath of communism, while the high amount of Caribbean countries might be a result of tourism and consumption of alcoholic beverages by vacationers</strong></p>
+<p><strong>It is also interesting to consider the range between Top1 and Top25, in beer consumption that gap is smaller than with wine and spirits. This could due to the fact that beer is cheaper per glass and universally produced and consumed around the world.</strong></p>
 </div>

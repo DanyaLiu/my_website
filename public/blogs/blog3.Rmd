@@ -8,7 +8,7 @@ draft: false
 image: NBA01.jpeg
 keywords: ""
 slug: blog3
-title: My travel journey of America
+title: My travel journey of US
 ---
 
 In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week! 

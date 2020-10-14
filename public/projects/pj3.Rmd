@@ -1,0 +1,88 @@
+---
+title: "Estimating Beta"
+date: '2020-10-14'
+description: ''
+draft: no
+image: CAPM.png
+keywords: ''
+slug: "pj3"
+categories:
+- ''
+- ''
+---
+
+```{r, setup, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)    # scrape websites
+library(purrr)  
+library(lubridate) #to handle dates
+library(readxl)
+```
+
+# Load data
+```{r}
+beta  <-  read_excel(here::here("data","Problem_Set_4_data.xls"), # Excel filename
+                            sheet="Question 4", # Sheet name
+                            skip=2) # Number of rows to skip
+
+beta = beta %>% 
+  rename("GOOD"="GOOG...2","SPY"="SPY...3","r_GOOG"="GOOG...4","r_SPY"="SPY...5","er_GOOG"="GOOG...8","er_SPY"="SPY...9")
+
+```
+
+# CAPM model plot
+
+**r(GOOG) - rf = beta * (r(SPY) - rf)**
+
+```{r}
+beta %>% 
+  ggplot(aes(x=er_SPY, y=er_GOOG)) +
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "excess return of SPY", 
+       y= "excess return of GOOG", 
+       title= "How is the relationship between Google (GOOG) and S&P 500 ETF (SPY)")
+
+```
+
+# Calculate beta
+```{r}
+#regression
+model_beta=lm(er_GOOG ~ er_SPY, data= beta)
+mosaic::msummary(model_beta)
+
+```
+
+**From the result of regression, we can see the beta of Google is 0.94595 and the Adjusted R-squared of this model is 0.504.**
+
+

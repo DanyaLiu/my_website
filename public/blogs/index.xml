@@ -17,21 +17,21 @@
     </item>
     
     <item>
-      <title>Lifestyle</title>
-      <link>/blogs/blogs/</link>
+      <title>Graduated from Fudan University</title>
+      <link>/blogs/blog5/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/blogs/</guid>
-      <description>My blogs about technology and lifestyle.</description>
+      <guid>/blogs/blog5/</guid>
+      <description>My graduation!!!!</description>
     </item>
     
     <item>
-      <title>My travel journey of America</title>
-      <link>/blogs/blog3/</link>
+      <title>My travel journey of Chongqing</title>
+      <link>/blogs/blog4/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/blog3/</guid>
-      <description>In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week!</description>
+      <guid>/blogs/blog4/</guid>
+      <description>In 2020 summer, I travelled to Chongqing, China. It is a great place!</description>
     </item>
     
     <item>
@@ -41,6 +41,15 @@
       
       <guid>/blogs/blog2/</guid>
       <description>I spent my summer of 2018 in Greece. I love Athens, Santorini, and Thira. Hope one day I can go there another time!</description>
+    </item>
+    
+    <item>
+      <title>My travel journey of US</title>
+      <link>/blogs/blog3/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog3/</guid>
+      <description>In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week!</description>
     </item>
     
   </channel>

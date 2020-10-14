@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MFA2021 @ LBS">
+	<meta name="author" content="Danya">
+	<meta name="generator" content="Hugo 0.75.1" />
+	<title>Estimating Beta &middot; Portfolio website for Danya</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Danya</strong> <span>MFA2021 @ LBS</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+                <li><a href="/projects">Projects</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">Explore more</a></li>
+            
+            
+                <li><a href="/" class="button fit">Log In</a></li>
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Estimating Beta</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/projects/CAPM.png" alt="" /></span>
+                            
+                            
+
+
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>beta  &lt;-  read_excel(here::here(&quot;data&quot;,&quot;Problem_Set_4_data.xls&quot;), # Excel filename
+                            sheet=&quot;Question 4&quot;, # Sheet name
+                            skip=2) # Number of rows to skip
+
+beta = beta %&gt;% 
+  rename(&quot;GOOD&quot;=&quot;GOOG...2&quot;,&quot;SPY&quot;=&quot;SPY...3&quot;,&quot;r_GOOG&quot;=&quot;GOOG...4&quot;,&quot;r_SPY&quot;=&quot;SPY...5&quot;,&quot;er_GOOG&quot;=&quot;GOOG...8&quot;,&quot;er_SPY&quot;=&quot;SPY...9&quot;)</code></pre>
+</div>
+<div id="capm-model-plot" class="section level1">
+<h1>CAPM model plot</h1>
+<p><strong>r(GOOG) - rf = beta * (r(SPY) - rf)</strong></p>
+<pre class="r"><code>beta %&gt;% 
+  ggplot(aes(x=er_SPY, y=er_GOOG)) +
+  geom_point()+
+  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = &quot;excess return of SPY&quot;, 
+       y= &quot;excess return of GOOG&quot;, 
+       title= &quot;How is the relationship between Google (GOOG) and S&amp;P 500 ETF (SPY)&quot;)</code></pre>
+<p><img src="/projects/pj3_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="calculate-beta" class="section level1">
+<h1>Calculate beta</h1>
+<pre class="r"><code>#regression
+model_beta=lm(er_GOOG ~ er_SPY, data= beta)
+mosaic::msummary(model_beta)</code></pre>
+<pre><code>##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.00152    0.00185    0.82     0.41    
+## er_SPY       0.94595    0.05803   16.30   &lt;2e-16 ***
+## 
+## Residual standard error: 0.0298 on 259 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.506,  Adjusted R-squared:  0.504 
+## F-statistic:  266 on 1 and 259 DF,  p-value: &lt;2e-16</code></pre>
+<p><strong>From the result of regression, we can see the beta of Google is 0.94595 and the Adjusted R-squared of this model is 0.504.</strong></p>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://twitter.com/ldyyy539" class="icon alt fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+                
+                    <li><a href="https://www.facebook.com/Ldyyy539" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/ldyyy539/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/DanyaLiu" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/danyaliu" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Danya</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

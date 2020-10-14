@@ -1,0 +1,663 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MFA2021 @ LBS">
+	<meta name="author" content="Danya">
+	<meta name="generator" content="Hugo 0.75.1" />
+	<title>Analysis of movies- IMDB dataset &middot; Portfolio website for Danya</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Danya</strong> <span>MFA2021 @ LBS</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+                <li><a href="/projects">Projects</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">Explore more</a></li>
+            
+            
+                <li><a href="/" class="button fit">Log In</a></li>
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Analysis of movies- IMDB dataset</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/projects/movie.jpg" alt="" /></span>
+                            
+                            
+
+
+<p>We will look at a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
+<div id="inspecting-the-dataset" class="section level1">
+<h1>Inspecting the dataset</h1>
+<pre class="r"><code>movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+glimpse(movies)</code></pre>
+<pre><code>## Rows: 2,961
+## Columns: 11
+## $ title               &lt;chr&gt; &quot;Avatar&quot;, &quot;Titanic&quot;, &quot;Jurassic World&quot;, &quot;The Aveng…
+## $ genre               &lt;chr&gt; &quot;Action&quot;, &quot;Drama&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;Action&quot;, …
+## $ director            &lt;chr&gt; &quot;James Cameron&quot;, &quot;James Cameron&quot;, &quot;Colin Trevorro…
+## $ year                &lt;dbl&gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, 2…
+## $ duration            &lt;dbl&gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93, …
+## $ gross               &lt;dbl&gt; 7.61e+08, 6.59e+08, 6.52e+08, 6.23e+08, 5.33e+08,…
+## $ budget              &lt;dbl&gt; 2.37e+08, 2.00e+08, 1.50e+08, 2.20e+08, 1.85e+08,…
+## $ cast_facebook_likes &lt;dbl&gt; 4834, 45223, 8458, 87697, 57802, 37723, 13485, 92…
+## $ votes               &lt;dbl&gt; 886204, 793059, 418214, 995415, 1676169, 534658, …
+## $ reviews             &lt;dbl&gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, 3…
+## $ rating              &lt;dbl&gt; 7.9, 7.7, 7.0, 8.1, 9.0, 6.5, 8.7, 7.5, 8.5, 7.2,…</code></pre>
+<pre class="r"><code>skim(movies)</code></pre>
+<table>
+<caption>(#tab:load_movies)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">movies</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">2961</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">11</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">8</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">title</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td align="right">0</td>
+<td align="right">2907</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">genre</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">17</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">director</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">32</td>
+<td align="right">0</td>
+<td align="right">1366</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">year</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.00e+03</td>
+<td align="right">9.95e+00</td>
+<td align="right">1920.0</td>
+<td align="right">2.00e+03</td>
+<td align="right">2.00e+03</td>
+<td align="right">2.01e+03</td>
+<td align="right">2.02e+03</td>
+<td align="left">▁▁▁▂▇</td>
+</tr>
+<tr class="even">
+<td align="left">duration</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.10e+02</td>
+<td align="right">2.22e+01</td>
+<td align="right">37.0</td>
+<td align="right">9.50e+01</td>
+<td align="right">1.06e+02</td>
+<td align="right">1.19e+02</td>
+<td align="right">3.30e+02</td>
+<td align="left">▃▇▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">gross</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5.81e+07</td>
+<td align="right">7.25e+07</td>
+<td align="right">703.0</td>
+<td align="right">1.23e+07</td>
+<td align="right">3.47e+07</td>
+<td align="right">7.56e+07</td>
+<td align="right">7.61e+08</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">budget</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4.06e+07</td>
+<td align="right">4.37e+07</td>
+<td align="right">218.0</td>
+<td align="right">1.10e+07</td>
+<td align="right">2.60e+07</td>
+<td align="right">5.50e+07</td>
+<td align="right">3.00e+08</td>
+<td align="left">▇▂▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">cast_facebook_likes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.24e+04</td>
+<td align="right">2.05e+04</td>
+<td align="right">0.0</td>
+<td align="right">2.24e+03</td>
+<td align="right">4.60e+03</td>
+<td align="right">1.69e+04</td>
+<td align="right">6.57e+05</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">votes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.09e+05</td>
+<td align="right">1.58e+05</td>
+<td align="right">5.0</td>
+<td align="right">1.99e+04</td>
+<td align="right">5.57e+04</td>
+<td align="right">1.33e+05</td>
+<td align="right">1.69e+06</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">reviews</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5.03e+02</td>
+<td align="right">4.94e+02</td>
+<td align="right">2.0</td>
+<td align="right">1.99e+02</td>
+<td align="right">3.64e+02</td>
+<td align="right">6.31e+02</td>
+<td align="right">5.31e+03</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">rating</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6.39e+00</td>
+<td align="right">1.05e+00</td>
+<td align="right">1.6</td>
+<td align="right">5.80e+00</td>
+<td align="right">6.50e+00</td>
+<td align="right">7.10e+00</td>
+<td align="right">9.30e+00</td>
+<td align="left">▁▁▆▇▁</td>
+</tr>
+</tbody>
+</table>
+<p>Besides the obvious variables of <code>title</code>, <code>genre</code>, <code>director</code>, <code>year</code>, and <code>duration</code>, the rest of the variables are as follows:</p>
+<ul>
+<li><code>gross</code> : The gross earnings in the US box office, not adjusted for inflation</li>
+<li><code>budget</code>: The movie’s budget</li>
+<li><code>cast_facebook_likes</code>: the number of facebook likes cast memebrs received</li>
+<li><code>votes</code>: the number of people who voted for (or rated) the movie in IMDB</li>
+<li><code>reviews</code>: the number of reviews for that movie</li>
+<li><code>rating</code>: IMDB average rating</li>
+</ul>
+<p>Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?</p>
+<p><strong>No missing but many duplicates across categories. There are 2961 rows and only 2907 unique movie titles, so it can be inferred that some movies show more than 1 times with different genres.</strong></p>
+</div>
+<div id="general-analysis" class="section level1">
+<h1>General Analysis</h1>
+<div id="how-many-movies-of-each-genre-are-in-this-dataset" class="section level2">
+<h2>How many movies of each genre are in this dataset?</h2>
+<pre class="r"><code>movies %&gt;% 
+  count(genre) %&gt;% 
+  arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 17 x 2
+##    genre           n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 Comedy        848
+##  2 Action        738
+##  3 Drama         498
+##  4 Adventure     288
+##  5 Crime         202
+##  6 Biography     135
+##  7 Horror        131
+##  8 Animation      35
+##  9 Fantasy        28
+## 10 Documentary    25
+## 11 Mystery        16
+## 12 Sci-Fi          7
+## 13 Family          3
+## 14 Musical         2
+## 15 Romance         2
+## 16 Western         2
+## 17 Thriller        1</code></pre>
+</div>
+<div id="exploring-the-relationship-between-earnings-and-budget-in-each-film-genre" class="section level2">
+<h2>Exploring the relationship between earnings and budget in each film genre</h2>
+<pre class="r"><code>movies %&gt;% 
+  mutate(return = gross/budget) %&gt;% 
+  group_by (genre) %&gt;% 
+  summarise (average_earnings = mean(gross), average_budget = mean(budget), return_on_budget = mean(return)) %&gt;% 
+  arrange(desc(return_on_budget))</code></pre>
+<pre><code>## # A tibble: 17 x 4
+##    genre       average_earnings average_budget return_on_budget
+##    &lt;chr&gt;                  &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+##  1 Horror             37713738.      13504916.         88.3    
+##  2 Biography          45201805.      28543696.         22.3    
+##  3 Musical            92084000        3189500          18.8    
+##  4 Family            149160478.      14833333.         14.1    
+##  5 Documentary        17353973.       5887852.          8.70   
+##  6 Western            20821884        3465000           7.06   
+##  7 Fantasy            42408841.      17582143.          6.68   
+##  8 Animation          98433792.      61701429.          5.01   
+##  9 Comedy             42630552.      24446319.          3.71   
+## 10 Mystery            67533021.      39218750           3.27   
+## 11 Romance            31264848.      25107500           3.17   
+## 12 Drama              37465371.      26242933.          2.95   
+## 13 Adventure          95794257.      66290069.          2.41   
+## 14 Crime              37502397.      26596169.          2.17   
+## 15 Action             86583860.      71354888.          1.92   
+## 16 Sci-Fi             29788371.      27607143.          1.58   
+## 17 Thriller               2468         300000           0.00823</code></pre>
+</div>
+<div id="table-of-summary-statistics-for-the-15-top-grossing-directors" class="section level2">
+<h2>Table of summary statistics for the 15 top grossing directors</h2>
+<pre class="r"><code>movies %&gt;% 
+  group_by(director) %&gt;% 
+  summarise(total_amount = sum(gross),mean_amount = mean(gross), median_amount = median(gross), SD_amount = sd(gross, na.rm= TRUE)) %&gt;%  
+  slice_max(n=15, total_amount) </code></pre>
+<pre><code>## # A tibble: 15 x 5
+##    director          total_amount mean_amount median_amount  SD_amount
+##    &lt;chr&gt;                    &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Steven Spielberg    4014061704  174524422.    164435221  101421051.
+##  2 Michael Bay         2231242537  171634041.    138396624  127161579.
+##  3 Tim Burton          2071275480  129454718.     76519172  108726924.
+##  4 Sam Raimi           2014600898  201460090.    234903076  162126632.
+##  5 James Cameron       1909725910  318287652.    175562880. 309171337.
+##  6 Christopher Nolan   1813227576  226653447     196667606. 187224133.
+##  7 George Lucas        1741418480  348283696     380262555  146193880.
+##  8 Robert Zemeckis     1619309108  124562239.    100853835   91300279.
+##  9 Clint Eastwood      1378321100   72543216.     46700000   75487408.
+## 10 Francis Lawrence    1358501971  271700394.    281666058  135437020.
+## 11 Ron Howard          1335988092  111332341     101587923   81933761.
+## 12 Gore Verbinski      1329600995  189942999.    123207194  154473822.
+## 13 Andrew Adamson      1137446920  284361730     279680930. 120895765.
+## 14 Shawn Levy          1129750988  102704635.     85463309   65484773.
+## 15 Ridley Scott        1128857598   80632686.     47775715   68812285.</code></pre>
+</div>
+<div id="how-do-movies-across-different-genres-perform-on-imdb-ratings" class="section level2">
+<h2>How do movies across different genres perform on IMDB ratings?</h2>
+<pre class="r"><code>movies %&gt;%
+  group_by(genre) %&gt;% 
+  summarise(count=n(), mean_rating=mean(rating), min_rating=min(rating), max_rating=max(rating), median_rating=median(rating), SD_rating=sd(gross, na.rm= TRUE)) %&gt;% arrange(desc(count))</code></pre>
+<pre><code>## # A tibble: 17 x 7
+##    genre       count mean_rating min_rating max_rating median_rating  SD_rating
+##    &lt;chr&gt;       &lt;int&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Comedy        848        6.11        1.9        8.8          6.2   48067667.
+##  2 Action        738        6.23        2.1        9            6.3   94846029.
+##  3 Drama         498        6.73        2.1        8.8          6.8   51331049.
+##  4 Adventure     288        6.51        2.3        8.6          6.6   96677829.
+##  5 Crime         202        6.92        4.8        9.3          6.9   38309059.
+##  6 Biography     135        7.11        4.5        8.9          7.2   49220303.
+##  7 Horror        131        5.83        3.6        8.5          5.9   31505660.
+##  8 Animation      35        6.65        4.5        8            6.9   86201928.
+##  9 Fantasy        28        6.15        4.3        7.9          6.45  27036114.
+## 10 Documentary    25        6.66        1.6        8.5          7.4   29441650.
+## 11 Mystery        16        6.86        4.6        8.5          6.9   54787287.
+## 12 Sci-Fi          7        6.66        5          8.2          6.4   30917838.
+## 13 Family          3        6.5         5.7        7.9          5.9  247535241.
+## 14 Musical         2        6.75        6.3        7.2          6.75 126255330.
+## 15 Romance         2        6.65        6.2        7.1          6.65  44107152.
+## 16 Western         2        5.70        4.1        7.3          5.70  29101851.
+## 17 Thriller        1        4.8         4.8        4.8          4.8         NA</code></pre>
+<pre class="r"><code>ggplot(movies, aes(x=rating))+
+  geom_density(aes(fill=genre), alpha = 0.3, show.legend = FALSE)+
+  facet_wrap(~genre, nrow = 6)+
+  labs(title=&quot;Ratings distributed by genre&quot;, 
+       x =&quot;ratings&quot;, 
+       caption = &quot;Source: IMDB dataset&quot;)+
+  theme_bw()+
+  NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/by_ratings-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="are-facebook-likes-a-good-predictor-of-box-office-revenue-of-a-movies" class="section level2">
+<h2>Are Facebook likes a good predictor of box office revenue of a movies?</h2>
+<p><strong>The number of facebook likes that the cast has received is not a good predictor of how much money a movie will make at the box office since the correlation coefficient is only ~0.2, too low to indicate a correlation between these two. Since the Gross Revenue vs Facebook Likes plot is hard to read, we decided to map Log of the number of FB likes to the X axis and Log of gross revenue to the Y axis.</strong></p>
+<pre class="r"><code>cor(movies$cast_facebook_likes, movies$gross)</code></pre>
+<pre><code>## [1] 0.213</code></pre>
+<pre class="r"><code>  ggplot(movies, aes(x=cast_facebook_likes, y= gross))+
+    geom_point()+
+    geom_smooth(method = &quot;lm&quot;)+
+    theme_bw()+
+    NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/gross_on_fblikes-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fblikes = movies %&gt;%  
+  select(gross, cast_facebook_likes) %&gt;% 
+  mutate(ln_gross=log(gross), ln_fblikes=log(cast_facebook_likes))
+
+  ggplot(fblikes, aes(x=ln_fblikes, y= ln_gross))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;)+
+  theme_bw()+
+    labs(
+    x = &quot;Log of the number of FB likes&quot;,
+    y= &quot;Log of gross revenue&quot; ,
+    title = &quot;How do Facebook likes correlate to box office performance?&quot;,
+    caption = &quot;Source: IMDB Dataset&quot;
+    )+
+    NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/gross_on_fblikes-2.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="how-does-the-budget-size-correlate-with-movie-revenue-performance" class="section level2">
+<h2>How does the budget size correlate with movie revenue performance?</h2>
+<p><strong>The budget is likely to be a good predictor of how much money a movie will make at the box office since the correlation coefficient is about ~0.64, indicating a correlation between these two. Since the first Gross revenue vs budget graph is difficult to interpret we follow it up with another graph in which we decided to map the log of the budget size to the X axis and the log of gross revenue to the Y axis</strong></p>
+<pre class="r"><code>cor(movies$budget, movies$gross)</code></pre>
+<pre><code>## [1] 0.641</code></pre>
+<pre class="r"><code>ggplot(movies, aes(x=budget, y= gross))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;)+
+  theme_bw()+
+   NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gross_on_budget = movies %&gt;%  
+  select(gross, budget) %&gt;% 
+  mutate(ln_gross=log(gross), ln_budget=log(budget))
+
+ggplot(gross_on_budget, aes(x=ln_budget, y= ln_gross))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;, fill=&quot;lightgrey&quot;)+
+  theme_bw()+
+  labs(
+    x = &quot;Log of film budget&quot;,
+    y= &quot;Log of gross revenue&quot; ,
+    title = &quot;Is a bigger budget a good predictor of box office success?&quot;,
+    caption = &quot;Source: IMDB Dataset&quot;) +
+    NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/gross_on_budget-2.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="how-do-imdb-ratings-correlate-with-box-office-perfromance-across-different-movie-genres" class="section level2">
+<h2>How do IMDB ratings correlate with box office perfromance across different movie genres?</h2>
+<p><strong>From these plots it seems that IMDB rating is not a good indicator of a movie’s box office revenue because for most movie genres most movies incline to the same revenue level regardless of their IMDB ratings. It is strange in the dataset that for some genres of movies not much data available.</strong></p>
+<pre class="r"><code>ggplot(movies, aes(x=rating, y=gross))+
+  geom_point()+
+  facet_wrap(~genre, nrow = 6)+
+  labs(title=&quot;IMDB Ratings as a predictor of box office performance&quot;, 
+       x =&quot;IMDB Ratings&quot;, 
+       y =&quot;Gross&quot;,
+       caption = &quot;Source: IMDB dataset&quot;)+
+  theme_bw()+
+  expand_limits(y=0, x = 0)+
+  NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/gross_on_rating-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="imdb-ratings-differences-between-directors" class="section level1">
+<h1>IMDB ratings: Differences between directors</h1>
+<p>Now we would like to explore whether the mean IMDB rating for Steven Spielberg and Tim Burton are the same or not.
+## Produce the data we will use</p>
+<pre class="r"><code>Burton_Spielberg &lt;- movies %&gt;% 
+  filter(director %in% c(&quot;Steven Spielberg&quot;, &quot;Tim Burton&quot;))</code></pre>
+<p>Below is the calculated the confidence intervals for the mean ratings of these two directors and as you can see they overlap. We will reproduce this graph and run a hpothesis test using both the <code>t.test</code> command and the <code>infer</code> package to simulate from a null distribution, where we assume zero difference between the two.</p>
+<div id="confidence-intervals-for-the-mean-ratings-of-steven-spielberg-and-tim-burton" class="section level2">
+<h2>Confidence intervals for the mean ratings of Steven Spielberg and Tim Burton</h2>
+<pre class="r"><code>g1 &lt;- Burton_Spielberg %&gt;% 
+  group_by(director) %&gt;% 
+  summarize(n = n(), 
+            mean_rating = mean(rating, na.rm = TRUE), 
+            SD_directors = sd(rating, na.rm = TRUE),
+            SE_directors = SD_directors/sqrt(n),
+            t_critical = qt(0.975, n-1),
+            lower95_ci = mean_rating - t_critical*SE_directors,
+            upper95_ci = mean_rating + t_critical*SE_directors)
+
+g1 %&gt;% 
+  ggplot(mapping = aes(x = mean_rating, y= reorder(director, mean_rating)))+
+  geom_point(aes(color = as.factor(director)), show.legend = FALSE, size = 5) +
+  geom_errorbar(aes(xmin = lower95_ci, xmax = upper95_ci, color = as.factor(director)), width = 0.1, show.legend = FALSE, size = 1.8) +
+  geom_rect(aes(xmin = max(lower95_ci), xmax = min(upper95_ci), ymin = -Inf, ymax = Inf), alpha = 0.1, fill = &quot;black&quot;) +
+  theme_minimal()+
+  labs(x = &quot;Mean IMDB Rating&quot;,
+       y = &quot;&quot;,
+       title = &quot;Do Spielberg and Burton have the same mean IMDB rating?&quot;,
+       subtitle = &quot;95% confidence intervals overlap&quot;
+       )+
+  geom_text(aes(label = round(mean_rating,2)), vjust=-1, size=6)+
+  geom_text(aes(x=upper95_ci, label = round(upper95_ci,2)), vjust=-1, size=5)+
+  geom_text(aes(x=lower95_ci, label = round(lower95_ci,2)), vjust=-1, size=5)+
+  NULL</code></pre>
+<p><img src="/projects/pj5_files/figure-html/movies_graph-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hypothesis-test-with-formula" class="section level2">
+<h2>Hypothesis test with formula</h2>
+<ul>
+<li>Null hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are the same</li>
+<li>Alternative hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are different</li>
+<li>p-value: if p-value is lower than 5%, then reject H0 and think the mean IMDB rating for Steven Spielberg and Tim Burton are different</li>
+</ul>
+<pre class="r"><code>t.test(rating ~ director, data = Burton_Spielberg)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  rating by director
+## t = 3, df = 31, p-value = 0.01
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.16 1.13
+## sample estimates:
+## mean in group Steven Spielberg       mean in group Tim Burton 
+##                           7.57                           6.93</code></pre>
+</div>
+<div id="hypothesis-test-with-infer" class="section level2">
+<h2>Hypothesis test with <code>infer</code></h2>
+<ul>
+<li>Null hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are the same</li>
+<li>Alternative hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are different</li>
+<li>p-value: if p-value is lower than 5%, then reject H0 and think the mean IMDB rating for Steven Spielberg and Tim Burton are different</li>
+</ul>
+<pre class="r"><code># initialize the test, which we save as `directors_diff`
+directors_diff &lt;- Burton_Spielberg %&gt;%
+    specify(rating ~ director) %&gt;%
+  
+    # the statistic we are searching for is the difference in means, with the order being &quot;Steven Spielberg&quot;, &quot;Tim Burton&quot;
+    calculate(stat = &quot;diff in means&quot;, order = c(&quot;Steven Spielberg&quot;, &quot;Tim Burton&quot;))
+
+# simulate the test on the null distribution, which we save as null
+directors_null_dist &lt;- Burton_Spielberg %&gt;%
+    specify(rating ~ director) %&gt;%
+    hypothesize(null = &quot;independence&quot;) %&gt;%
+    generate(reps = 1000, type = &quot;permute&quot;) %&gt;%
+    calculate(stat = &quot;diff in means&quot;, order = c(&quot;Steven Spielberg&quot;, &quot;Tim Burton&quot;))
+
+# Visualising to see how many of these null permutations have a difference
+directors_null_dist %&gt;% visualize() +
+  shade_p_value(obs_stat = directors_diff, direction = &quot;two-sided&quot;)</code></pre>
+<p><img src="/projects/pj5_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Calculating the p-value for the hypothesis test
+directors_null_dist %&gt;%
+  get_p_value(obs_stat = directors_diff, direction = &quot;two_sided&quot;)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   p_value
+##     &lt;dbl&gt;
+## 1   0.004</code></pre>
+<p><strong>From the hypothesis test, we can see that the t-stat is 3 and the p-value is 1% which is smaller than 5%, so we reject the null hypothesis and conclude that the the difference in mean IMDB ratings for Steven Spielberg and Tim Burton is statistically significant, specifically the mean rating of Steven Spielberg is higher. This is just like what we expected, as we all prefer Steven Spielberg.</strong></p>
+</div>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://twitter.com/ldyyy539" class="icon alt fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+                
+                    <li><a href="https://www.facebook.com/Ldyyy539" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/ldyyy539/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/DanyaLiu" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/danyaliu" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Danya</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

@@ -1,0 +1,308 @@
+---
+title: "Analysis of movies- IMDB dataset"
+date: '2020-10-14'
+description: ''
+draft: no
+image: movie.jpg
+keywords: ''
+slug: "pj5"
+categories:
+- ''
+- ''
+---
+
+```{r, setup, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)    # scrape websites
+library(purrr)  
+library(lubridate) #to handle dates
+library(readxl)
+library(infer)
+```
+
+We will look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
+
+# Inspecting the dataset
+```{r,load_movies, warning=FALSE, message=FALSE}
+
+movies <- read_csv(here::here("data", "movies.csv"))
+glimpse(movies)
+skim(movies)
+```
+
+Besides the obvious variables of `title`, `genre`, `director`, `year`, and `duration`, the rest of the variables are as follows:
+
+- `gross` : The gross earnings in the US box office, not adjusted for inflation
+- `budget`: The movie's budget 
+- `cast_facebook_likes`: the number of facebook likes cast memebrs received
+- `votes`: the number of people who voted for (or rated) the movie in IMDB 
+- `reviews`: the number of reviews for that movie
+- `rating`: IMDB average rating 
+
+Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
+
+**No missing but many duplicates across categories. There are 2961 rows and only 2907 unique movie titles, so it can be inferred that some movies show more than 1 times with different genres.**
+
+# General Analysis
+
+## How many movies of each genre are in this dataset?
+
+```{r, count_by_genre}
+
+movies %>% 
+  count(genre) %>% 
+  arrange(desc(n))
+
+```
+
+## Exploring the relationship between earnings and budget in each film genre
+
+
+```{r, by_genre}
+ 
+movies %>% 
+  mutate(return = gross/budget) %>% 
+  group_by (genre) %>% 
+  summarise (average_earnings = mean(gross), average_budget = mean(budget), return_on_budget = mean(return)) %>% 
+  arrange(desc(return_on_budget))
+
+```
+
+## Table of summary statistics for the 15 top grossing directors
+
+
+```{r, by_directors}
+
+movies %>% 
+  group_by(director) %>% 
+  summarise(total_amount = sum(gross),mean_amount = mean(gross), median_amount = median(gross), SD_amount = sd(gross, na.rm= TRUE)) %>%  
+  slice_max(n=15, total_amount) 
+
+```
+
+## How do movies across different genres perform on IMDB ratings?
+
+```{r, by_ratings}
+
+movies %>%
+  group_by(genre) %>% 
+  summarise(count=n(), mean_rating=mean(rating), min_rating=min(rating), max_rating=max(rating), median_rating=median(rating), SD_rating=sd(gross, na.rm= TRUE)) %>% arrange(desc(count))
+
+ggplot(movies, aes(x=rating))+
+  geom_density(aes(fill=genre), alpha = 0.3, show.legend = FALSE)+
+  facet_wrap(~genre, nrow = 6)+
+  labs(title="Ratings distributed by genre", 
+       x ="ratings", 
+       caption = "Source: IMDB dataset")+
+  theme_bw()+
+  NULL
+
+```
+
+## Are Facebook likes a good predictor of box office revenue of a movies?
+
+**The number of facebook likes that the cast has received is not a good predictor of how much money a movie will make at the box office since the correlation coefficient is only ~0.2, too low to indicate a correlation between these two. Since the Gross Revenue vs Facebook Likes plot is hard to read, we decided to map Log of the number of FB likes to the X axis and Log of gross revenue to the Y axis.**
+
+  
+```{r, gross_on_fblikes}
+
+cor(movies$cast_facebook_likes, movies$gross)
+
+
+  ggplot(movies, aes(x=cast_facebook_likes, y= gross))+
+    geom_point()+
+    geom_smooth(method = "lm")+
+    theme_bw()+
+    NULL
+
+fblikes = movies %>%  
+  select(gross, cast_facebook_likes) %>% 
+  mutate(ln_gross=log(gross), ln_fblikes=log(cast_facebook_likes))
+
+  ggplot(fblikes, aes(x=ln_fblikes, y= ln_gross))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()+
+    labs(
+    x = "Log of the number of FB likes",
+    y= "Log of gross revenue" ,
+    title = "How do Facebook likes correlate to box office performance?",
+    caption = "Source: IMDB Dataset"
+    )+
+    NULL
+
+```
+
+
+## How does the budget size correlate with movie revenue performance?
+
+**The budget is likely to be a good predictor of how much money a movie will make at the box office since the correlation coefficient is about ~0.64, indicating a correlation between these two. Since the first Gross revenue vs budget graph is difficult to interpret we follow it up with another graph in which we decided to map the log of the budget size to the X axis and the log of gross revenue to the Y axis**
+
+```{r, gross_on_budget}
+
+cor(movies$budget, movies$gross)
+
+ggplot(movies, aes(x=budget, y= gross))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  theme_bw()+
+   NULL
+
+gross_on_budget = movies %>%  
+  select(gross, budget) %>% 
+  mutate(ln_gross=log(gross), ln_budget=log(budget))
+
+ggplot(gross_on_budget, aes(x=ln_budget, y= ln_gross))+
+  geom_point()+
+  geom_smooth(method = "lm", fill="lightgrey")+
+  theme_bw()+
+  labs(
+    x = "Log of film budget",
+    y= "Log of gross revenue" ,
+    title = "Is a bigger budget a good predictor of box office success?",
+    caption = "Source: IMDB Dataset") +
+    NULL
+
+```
+  
+## How do IMDB ratings correlate with box office perfromance across different movie genres?
+
+**From these plots it seems that IMDB rating is not a good indicator of a movie's box office revenue because for most movie genres most movies incline to the same revenue level regardless of their IMDB ratings. It is strange in the dataset that for some genres of movies not much data available.**
+  
+
+```{r, gross_on_rating}
+
+ggplot(movies, aes(x=rating, y=gross))+
+  geom_point()+
+  facet_wrap(~genre, nrow = 6)+
+  labs(title="IMDB Ratings as a predictor of box office performance", 
+       x ="IMDB Ratings", 
+       y ="Gross",
+       caption = "Source: IMDB dataset")+
+  theme_bw()+
+  expand_limits(y=0, x = 0)+
+  NULL
+
+```
+
+# IMDB ratings: Differences between directors
+
+Now we would like to explore whether the mean IMDB rating for Steven Spielberg and Tim Burton are the same or not. 
+## Produce the data we will use
+
+```{r load-movies-data}
+
+Burton_Spielberg <- movies %>% 
+  filter(director %in% c("Steven Spielberg", "Tim Burton"))
+
+```
+
+Below is the calculated the confidence intervals for the mean ratings of these two directors and as you can see they overlap. We will reproduce this graph and run a hpothesis test using both the `t.test` command and the `infer` package to simulate from a null distribution, where we assume zero difference between the two.
+
+## Confidence intervals for the mean ratings of Steven Spielberg and Tim Burton
+
+```{r movies_graph}
+
+g1 <- Burton_Spielberg %>% 
+  group_by(director) %>% 
+  summarize(n = n(), 
+            mean_rating = mean(rating, na.rm = TRUE), 
+            SD_directors = sd(rating, na.rm = TRUE),
+            SE_directors = SD_directors/sqrt(n),
+            t_critical = qt(0.975, n-1),
+            lower95_ci = mean_rating - t_critical*SE_directors,
+            upper95_ci = mean_rating + t_critical*SE_directors)
+
+g1 %>% 
+  ggplot(mapping = aes(x = mean_rating, y= reorder(director, mean_rating)))+
+  geom_point(aes(color = as.factor(director)), show.legend = FALSE, size = 5) +
+  geom_errorbar(aes(xmin = lower95_ci, xmax = upper95_ci, color = as.factor(director)), width = 0.1, show.legend = FALSE, size = 1.8) +
+  geom_rect(aes(xmin = max(lower95_ci), xmax = min(upper95_ci), ymin = -Inf, ymax = Inf), alpha = 0.1, fill = "black") +
+  theme_minimal()+
+  labs(x = "Mean IMDB Rating",
+       y = "",
+       title = "Do Spielberg and Burton have the same mean IMDB rating?",
+       subtitle = "95% confidence intervals overlap"
+       )+
+  geom_text(aes(label = round(mean_rating,2)), vjust=-1, size=6)+
+  geom_text(aes(x=upper95_ci, label = round(upper95_ci,2)), vjust=-1, size=5)+
+  geom_text(aes(x=lower95_ci, label = round(lower95_ci,2)), vjust=-1, size=5)+
+  NULL
+
+
+```
+
+
+## Hypothesis test with formula
+
+- Null hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are the same
+- Alternative hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are different
+- p-value: if p-value is lower than 5%, then reject H0 and think the mean IMDB rating for Steven Spielberg and Tim Burton are different
+
+```{r}
+
+t.test(rating ~ director, data = Burton_Spielberg)
+
+```
+
+## Hypothesis test with `infer`
+
+- Null hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are the same
+- Alternative hypotheses: The mean IMDB rating for Steven Spielberg and Tim Burton are different
+- p-value: if p-value is lower than 5%, then reject H0 and think the mean IMDB rating for Steven Spielberg and Tim Burton are different
+
+```{r}
+
+# initialize the test, which we save as `directors_diff`
+directors_diff <- Burton_Spielberg %>%
+    specify(rating ~ director) %>%
+  
+    # the statistic we are searching for is the difference in means, with the order being "Steven Spielberg", "Tim Burton"
+    calculate(stat = "diff in means", order = c("Steven Spielberg", "Tim Burton"))
+
+# simulate the test on the null distribution, which we save as null
+directors_null_dist <- Burton_Spielberg %>%
+    specify(rating ~ director) %>%
+    hypothesize(null = "independence") %>%
+    generate(reps = 1000, type = "permute") %>%
+    calculate(stat = "diff in means", order = c("Steven Spielberg", "Tim Burton"))
+
+# Visualising to see how many of these null permutations have a difference
+directors_null_dist %>% visualize() +
+  shade_p_value(obs_stat = directors_diff, direction = "two-sided")
+
+# Calculating the p-value for the hypothesis test
+directors_null_dist %>%
+  get_p_value(obs_stat = directors_diff, direction = "two_sided")
+```
+
+**From the hypothesis test, we can see that the t-stat is 3 and the p-value is 1% which is smaller than 5%, so we reject the null hypothesis and conclude that the the difference in mean IMDB ratings for Steven Spielberg and Tim Burton is statistically significant, specifically the mean rating of Steven Spielberg is higher. This is just like what we expected, as we all prefer Steven Spielberg.**
+

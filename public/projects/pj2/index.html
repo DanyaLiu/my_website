@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MFA2021 @ LBS">
+	<meta name="author" content="Danya">
+	<meta name="generator" content="Hugo 0.75.1" />
+	<title>Several stocks in China A-share market &middot; Portfolio website for Danya</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Danya</strong> <span>MFA2021 @ LBS</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+                <li><a href="/projects">Projects</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">Explore more</a></li>
+            
+            
+                <li><a href="/" class="button fit">Log In</a></li>
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Several stocks in China A-share market</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/projects/ashare.jpeg" alt="" /></span>
+                            
+                            
+
+
+<div id="mystocks-get-data" class="section level1">
+<h1>myStocks: get data</h1>
+<p>Get stock prices of using <code>tidyquant</code> package</p>
+<pre class="r"><code>myStocks &lt;- c(&#39;601318.SS&#39;,&#39;601899.SS&#39;,&#39;601998.SS&#39;,&#39;600600.SS&#39;,&#39;600016.SS&#39;,&#39;600332.SS&#39;,&#39;601992.SS&#39;,&#39;600085.SS&#39;,&#39;601811.SS&#39;,&#39;600754.SS&#39;,&#39;601111.SS&#39;,&#39;600585.SS&#39;,&#39;000063.SZ&#39;,&#39;002594.SZ&#39;,&#39;000921.SZ&#39;,&#39;002202.SZ&#39;,&#39;002672.SZ&#39;,&#39;000338.SZ&#39;) %&gt;%
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2015-01-01&quot;,
+         to   = &quot;2020-09-30&quot;) %&gt;%
+  group_by(symbol) 
+
+glimpse(myStocks) # examine the structure of the resulting data frame</code></pre>
+<pre><code>## Rows: 24,792
+## Columns: 8
+## Groups: symbol [18]
+## $ symbol   &lt;chr&gt; &quot;601318.SS&quot;, &quot;601318.SS&quot;, &quot;601318.SS&quot;, &quot;601318.SS&quot;, &quot;601318.…
+## $ date     &lt;date&gt; 2015-01-05, 2015-01-06, 2015-01-07, 2015-01-08, 2015-01-09,…
+## $ open     &lt;dbl&gt; 38.8, 37.2, 36.7, 37.2, 35.6, 37.0, 37.7, 37.6, 37.0, 39.7, …
+## $ high     &lt;dbl&gt; 39.1, 38.4, 37.8, 37.5, 39.1, 38.1, 38.5, 37.9, 39.7, 40.7, …
+## $ low      &lt;dbl&gt; 37.6, 36.0, 36.2, 35.4, 35.4, 36.2, 37.0, 36.5, 36.8, 39.0, …
+## $ close    &lt;dbl&gt; 38.1, 36.9, 36.7, 35.5, 36.4, 37.6, 37.6, 36.9, 39.4, 39.1, …
+## $ volume   &lt;dbl&gt; 4.87e+08, 4.68e+08, 3.41e+08, 3.58e+08, 6.24e+08, 5.31e+08, …
+## $ adjusted &lt;dbl&gt; 34.0, 32.9, 32.8, 31.8, 32.5, 33.6, 33.6, 33.0, 35.2, 35.0, …</code></pre>
+<pre class="r"><code># add names to stocks
+name &lt;- data.frame(name = c(&#39;Ping An Insurance&#39;,&#39;Zijin Mining Group Ltd&#39;,&#39;China CITIC Bank&#39;,&#39;Tsingtao Brewery&#39;,&#39;China Minsheng Bank&#39;,&#39;Guangzhou Baiyunshan Pharmaceutical Holdings&#39;,&#39;BBMG Corporation Ltd&#39;,&#39;Tong Ren Tang&#39;,&#39;Xinhua Winshare Publishing and Media Co., Ltd&#39;,&#39;Shanghai Jin Jiang International Hotels&#39;,&#39;Air China&#39;,&#39;Anhui Conch Cement&#39;,&#39;ZTE Corporation&#39;,&#39;BYD Company&#39;,&#39;Hisense Kelon Electrical Holdings Company Limited&#39;,&#39;Xinjiang Goldwind Science &amp; Technology Co., Ltd&#39;,&#39;Dongjiang Environmental&#39;,&#39;Weichai Power&#39;), 
+                   symbol = c(&#39;601318.SS&#39;,&#39;601899.SS&#39;,&#39;601998.SS&#39;,&#39;600600.SS&#39;,&#39;600016.SS&#39;,&#39;600332.SS&#39;,&#39;601992.SS&#39;,&#39;600085.SS&#39;,&#39;601811.SS&#39;,&#39;600754.SS&#39;,&#39;601111.SS&#39;,&#39;600585.SS&#39;,&#39;000063.SZ&#39;,&#39;002594.SZ&#39;,&#39;000921.SZ&#39;,&#39;002202.SZ&#39;,&#39;002672.SZ&#39;,&#39;000338.SZ&#39;))
+
+name$name &lt;- factor(name$name, 
+                    levels = name$name,
+                    ordered = TRUE)
+
+myStocks &lt;- myStocks %&gt;% 
+  left_join(name, by=&quot;symbol&quot;)</code></pre>
+</div>
+<div id="transforming-the-data-to-include-daily-monthly-and-yearly-returns" class="section level1">
+<h1>Transforming the data to include daily, monthly and yearly returns</h1>
+<pre class="r"><code>#calculate daily returns
+myStocks_returns_daily &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;daily&quot;, 
+               type       = &quot;log&quot;,
+               col_rename = &quot;daily.returns&quot;,
+               cols = c(nested.col))    %&gt;% 
+  left_join(name, by=&quot;symbol&quot;)
+
+#calculate monthly  returns
+myStocks_returns_monthly &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;monthly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;monthly.returns&quot;,
+               cols = c(nested.col))   %&gt;% 
+  left_join(name, by=&quot;symbol&quot;)
+
+#calculate yearly returns
+myStocks_returns_annual &lt;- myStocks %&gt;%
+  group_by(symbol) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;yearly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;yearly.returns&quot;,
+               cols = c(nested.col))  %&gt;% 
+  left_join(name, by=&quot;symbol&quot;)</code></pre>
+</div>
+<div id="creating-a-new-dataframe-for-summary-statistics-for-monthly-stock-returns" class="section level1">
+<h1>Creating a new dataframe for summary statistics for monthly stock returns</h1>
+<pre class="r"><code>Summary_monthly_returns &lt;- myStocks_returns_monthly %&gt;%
+  summarise(Min=min(monthly.returns), 
+            Max= max(monthly.returns), 
+            Median= median(monthly.returns),
+            Mean= mean(monthly.returns), 
+            Standard_Deviation=sd(monthly.returns))  %&gt;% 
+  left_join(name, by=&quot;symbol&quot;) %&gt;% 
+  select(&quot;name&quot;,1:6)
+
+Summary_monthly_returns #view dataframe</code></pre>
+<pre><code>## # A tibble: 18 x 7
+##    name                 symbol     Min   Max   Median      Mean Standard_Deviat…
+##    &lt;ord&gt;                &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;            &lt;dbl&gt;
+##  1 ZTE Corporation      000063… -0.584 0.482  0.0245    2.33e-2           0.150 
+##  2 Weichai Power        000338… -0.291 0.240  0.0144    1.82e-2           0.0960
+##  3 Hisense Kelon Elect… 000921… -0.234 0.450 -0.0141    1.68e-2           0.142 
+##  4 Xinjiang Goldwind S… 002202… -0.297 0.396 -0.00894   1.01e-2           0.131 
+##  5 BYD Company          002594… -0.273 0.409 -0.00267   2.22e-2           0.127 
+##  6 Dongjiang Environme… 002672… -0.310 0.288 -0.00413   1.73e-4           0.106 
+##  7 China Minsheng Bank  600016… -0.114 0.117 -0.00351  -3.06e-3           0.0490
+##  8 Tong Ren Tang        600085… -0.348 0.678 -0.00719   1.00e-2           0.119 
+##  9 Guangzhou Baiyunsha… 600332… -0.301 0.255  0.00216   6.99e-3           0.0963
+## 10 Anhui Conch Cement   600585… -0.230 0.199  0.0127    1.98e-2           0.0887
+## 11 Tsingtao Brewery     600600… -0.221 0.302  0.0122    1.38e-2           0.103 
+## 12 Shanghai Jin Jiang … 600754… -0.360 0.422  0.00376   1.61e-2           0.125 
+## 13 Air China            601111… -0.341 0.384  0.0181    6.33e-3           0.130 
+## 14 Ping An Insurance    601318… -0.181 0.188  0.0124    1.46e-2           0.0748
+## 15 Xinhua Winshare Pub… 601811… -0.250 2.11  -0.0147    2.70e-2           0.315 
+## 16 Zijin Mining Group … 601899… -0.265 0.354 -0.0111    1.60e-2           0.117 
+## 17 BBMG Corporation Ltd 601992… -0.188 0.734 -0.0199   -4.31e-5           0.125 
+## 18 China CITIC Bank     601998… -0.231 0.165 -0.0119   -1.69e-3           0.0706</code></pre>
+</div>
+<div id="comparing-the-distribution-of-monthly-returns-between-various-stocks" class="section level1">
+<h1>Comparing the distribution of monthly returns between various stocks</h1>
+<pre class="r"><code>ggplot(myStocks_returns_monthly, aes(x=monthly.returns))+
+  geom_density()+
+  facet_wrap(~name)+
+  theme_igray()+
+  labs(x=&quot;Monthly Returns&quot;, 
+       y=&quot;Density&quot;, 
+       title = &quot;Charting the Distribution of Monthly Returns&quot;)</code></pre>
+<p><img src="/projects/pj2_files/figure-html/density_monthly_returns-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><strong>The plots where the peaks are low and spread out over a wide distance are riskier since their monthly returns tend to fluctuate more often between negative and positive and are less likely to be similar over long periods of time. The plots where the peak is high and nearer to positive returns are less risky. Air China appears to be riskiest, followed by Ekectrical Holdings. Banks appears to the least risky.</strong></p>
+</div>
+<div id="analyzing-the-risk-vs-return" class="section level1">
+<h1>Analyzing the risk vs return</h1>
+<pre class="r"><code>ggplot(Summary_monthly_returns,aes(x=Standard_Deviation,y=Mean))+
+  geom_point()+
+  ggrepel::geom_text_repel(position=&quot;identity&quot;,label=Summary_monthly_returns$symbol)+
+  theme_solarized()+
+  labs(x=&quot;Risk&quot;, 
+       y=&quot;Expected Monthly Return&quot;, 
+       title = &quot;Charting the Risk vs. Expected Return of stocks&quot;)</code></pre>
+<p><img src="/projects/pj2_files/figure-html/risk_return_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="boxplot-of-annual-returns" class="section level1">
+<h1>Boxplot of annual returns</h1>
+<pre class="r"><code>myStocks_returns_annual %&gt;% 
+  group_by(name) %&gt;% 
+  mutate(median_return= median(yearly.returns)) %&gt;% 
+
+  # arrange stocks by median yearly return, so highest median return appears first, etc.   
+  ggplot(aes(x=reorder(name, median_return), y=yearly.returns, colour=name)) +
+  geom_boxplot()+
+  coord_flip()+
+  labs(x=&quot;Stock&quot;, 
+       y=&quot;Returns&quot;, 
+       title = &quot;Boxplot of Annual Returns&quot;)+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 2))+
+  guides(color=FALSE) +
+  theme_bw()+
+  NULL</code></pre>
+<p><img src="/projects/pj2_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bar-plot-that-shows-return-for-each-stock-on-a-year-by-year-basis" class="section level1">
+<h1>Bar plot that shows return for each stock on a year-by-year basis</h1>
+<pre class="r"><code>ggplot(myStocks_returns_annual, aes(x=year(date), y=yearly.returns, fill=name)) +
+  geom_col(position = &quot;dodge&quot;)+
+  labs(x=&quot;Year&quot;, y=&quot;Returns&quot;, title = &quot;Annual Returns&quot;)+
+  scale_y_continuous(labels = scales::percent)+
+  guides(fill=guide_legend(title=NULL))+
+  theme_bw()+
+  NULL</code></pre>
+<p><img src="/projects/pj2_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://twitter.com/ldyyy539" class="icon alt fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+                
+                    <li><a href="https://www.facebook.com/Ldyyy539" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/ldyyy539/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/DanyaLiu" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/danyaliu" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Danya</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

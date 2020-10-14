@@ -17,21 +17,51 @@
     </item>
     
     <item>
-      <title>Lifestyle</title>
-      <link>/blogs/blogs/</link>
+      <title>Analysis of movies- IMDB dataset</title>
+      <link>/projects/pj5/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/blogs/</guid>
-      <description>My blogs about technology and lifestyle.</description>
+      <guid>/projects/pj5/</guid>
+      <description>We will look at a subset sample of movies, taken from the Kaggle IMDB 5000 movie dataset
+Inspecting the dataset movies &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;movies.csv&amp;quot;)) glimpse(movies) ## Rows: 2,961 ## Columns: 11 ## $ title &amp;lt;chr&amp;gt; &amp;quot;Avatar&amp;quot;, &amp;quot;Titanic&amp;quot;, &amp;quot;Jurassic World&amp;quot;, &amp;quot;The Aveng… ## $ genre &amp;lt;chr&amp;gt; &amp;quot;Action&amp;quot;, &amp;quot;Drama&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;, … ## $ director &amp;lt;chr&amp;gt; &amp;quot;James Cameron&amp;quot;, &amp;quot;James Cameron&amp;quot;, &amp;quot;Colin Trevorro… ## $ year &amp;lt;dbl&amp;gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, 2… ## $ duration &amp;lt;dbl&amp;gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93, … ## $ gross &amp;lt;dbl&amp;gt; 7.</description>
     </item>
     
     <item>
-      <title>My travel journey of America</title>
-      <link>/blogs/blog3/</link>
+      <title>Estimating Beta</title>
+      <link>/projects/pj3/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/blog3/</guid>
-      <description>In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week!</description>
+      <guid>/projects/pj3/</guid>
+      <description>Load data beta &amp;lt;- read_excel(here::here(&amp;quot;data&amp;quot;,&amp;quot;Problem_Set_4_data.xls&amp;quot;), # Excel filename sheet=&amp;quot;Question 4&amp;quot;, # Sheet name skip=2) # Number of rows to skip beta = beta %&amp;gt;% rename(&amp;quot;GOOD&amp;quot;=&amp;quot;GOOG...2&amp;quot;,&amp;quot;SPY&amp;quot;=&amp;quot;SPY...3&amp;quot;,&amp;quot;r_GOOG&amp;quot;=&amp;quot;GOOG...4&amp;quot;,&amp;quot;r_SPY&amp;quot;=&amp;quot;SPY...5&amp;quot;,&amp;quot;er_GOOG&amp;quot;=&amp;quot;GOOG...8&amp;quot;,&amp;quot;er_SPY&amp;quot;=&amp;quot;SPY...9&amp;quot;)  CAPM model plot r(GOOG) - rf = beta * (r(SPY) - rf)
+beta %&amp;gt;% ggplot(aes(x=er_SPY, y=er_GOOG)) + geom_point()+ geom_smooth(method=&amp;quot;lm&amp;quot;, se=FALSE) + scale_x_continuous(labels = scales::percent) + scale_y_continuous(labels = scales::percent) + labs(x = &amp;quot;excess return of SPY&amp;quot;, y= &amp;quot;excess return of GOOG&amp;quot;, title= &amp;quot;How is the relationship between Google (GOOG) and S&amp;amp;P 500 ETF (SPY)&amp;quot;)  Calculate beta #regression model_beta=lm(er_GOOG ~ er_SPY, data= beta) mosaic::msummary(model_beta) ## Estimate Std.</description>
+    </item>
+    
+    <item>
+      <title>Graduated from Fudan University</title>
+      <link>/blogs/blog5/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog5/</guid>
+      <description>My graduation!!!!</description>
+    </item>
+    
+    <item>
+      <title>Multi-Factor Models and Performance Evaluation</title>
+      <link>/projects/pj4/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/pj4/</guid>
+      <description>Instruction Evaluating the performance of Goldman Sachs and DFA over the period from January 2000 through December 2004. The data for the Fama-French portfolios are taken from Ken French’s website
+ Load data multi_factor_models &amp;lt;- read_excel(here::here(&amp;quot;data&amp;quot;,&amp;quot;Problem_Set_4_data.xls&amp;quot;), # Excel filename sheet=&amp;quot;Question 5&amp;quot;, # Sheet name skip=4) # Number of rows to skip #clean name multi_factor_models = multi_factor_models %&amp;gt;% rename(&amp;quot;GOLDMAN&amp;quot;=&amp;quot;GOLDMAN...11&amp;quot;, &amp;quot;DFA&amp;quot;=&amp;quot;DFA...12&amp;quot;, &amp;quot;SMB&amp;quot;=&amp;quot;SMB...15&amp;quot;, &amp;quot;mkt_rf&amp;quot;=&amp;quot;Mkt - Rf...14&amp;quot;, &amp;quot;HML&amp;quot;=&amp;quot;HML...16&amp;quot;, &amp;quot;MOM&amp;quot;=&amp;quot;MOM...17&amp;quot;, &amp;quot;rf&amp;quot;=&amp;quot;Rf...18&amp;quot;) %&amp;gt;% select(&amp;quot;MONTH&amp;quot;, &amp;quot;GOLDMAN&amp;quot;, &amp;quot;DFA&amp;quot;, &amp;quot;SMB&amp;quot;, &amp;quot;mkt_rf&amp;quot;, &amp;quot;HML&amp;quot;, &amp;quot;MOM&amp;quot;, &amp;quot;rf&amp;quot;)  Summarize the returns data for each of the funds favstats(~GOLDMAN, data = multi_factor_models)  minQ1medianQ3maxmeansdnmissing  -0.</description>
+    </item>
+    
+    <item>
+      <title>My travel journey of Chongqing</title>
+      <link>/blogs/blog4/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog4/</guid>
+      <description>In 2020 summer, I travelled to Chongqing, China. It is a great place!</description>
     </item>
     
     <item>
@@ -44,12 +74,32 @@
     </item>
     
     <item>
-      <title>Projects</title>
-      <link>/projects/</link>
+      <title>My travel journey of US</title>
+      <link>/blogs/blog3/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/projects/</guid>
-      <description>My blogs about technology and lifestyle.</description>
+      <guid>/blogs/blog3/</guid>
+      <description>In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week!</description>
+    </item>
+    
+    <item>
+      <title>Several stocks in China A-share market</title>
+      <link>/projects/pj2/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/pj2/</guid>
+      <description>myStocks: get data Get stock prices of using tidyquant package
+myStocks &amp;lt;- c(&amp;#39;601318.SS&amp;#39;,&amp;#39;601899.SS&amp;#39;,&amp;#39;601998.SS&amp;#39;,&amp;#39;600600.SS&amp;#39;,&amp;#39;600016.SS&amp;#39;,&amp;#39;600332.SS&amp;#39;,&amp;#39;601992.SS&amp;#39;,&amp;#39;600085.SS&amp;#39;,&amp;#39;601811.SS&amp;#39;,&amp;#39;600754.SS&amp;#39;,&amp;#39;601111.SS&amp;#39;,&amp;#39;600585.SS&amp;#39;,&amp;#39;000063.SZ&amp;#39;,&amp;#39;002594.SZ&amp;#39;,&amp;#39;000921.SZ&amp;#39;,&amp;#39;002202.SZ&amp;#39;,&amp;#39;002672.SZ&amp;#39;,&amp;#39;000338.SZ&amp;#39;) %&amp;gt;% tq_get(get = &amp;quot;stock.prices&amp;quot;, from = &amp;quot;2015-01-01&amp;quot;, to = &amp;quot;2020-09-30&amp;quot;) %&amp;gt;% group_by(symbol) glimpse(myStocks) # examine the structure of the resulting data frame ## Rows: 24,792 ## Columns: 8 ## Groups: symbol [18] ## $ symbol &amp;lt;chr&amp;gt; &amp;quot;601318.SS&amp;quot;, &amp;quot;601318.SS&amp;quot;, &amp;quot;601318.SS&amp;quot;, &amp;quot;601318.SS&amp;quot;, &amp;quot;601318.… ## $ date &amp;lt;date&amp;gt; 2015-01-05, 2015-01-06, 2015-01-07, 2015-01-08, 2015-01-09,… ## $ open &amp;lt;dbl&amp;gt; 38.8, 37.2, 36.</description>
+    </item>
+    
+    <item>
+      <title>Where Do People Drink The Most Beer, Wine And Spirits?</title>
+      <link>/projects/pj1/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/pj1/</guid>
+      <description>Back in 2014, fivethiryeight.com published an article on alcohol consumption in different countries. The data drinks is available as part of the fivethirtyeight package.
+library(fivethirtyeight) data(drinks) glimpse(drinks) ## Rows: 193 ## Columns: 5 ## $ country &amp;lt;chr&amp;gt; &amp;quot;Afghanistan&amp;quot;, &amp;quot;Albania&amp;quot;, &amp;quot;Algeria&amp;quot;, &amp;quot;An… ## $ beer_servings &amp;lt;int&amp;gt; 0, 89, 25, 245, 217, 102, 193, 21, 261, … ## $ spirit_servings &amp;lt;int&amp;gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, 75… ## $ wine_servings &amp;lt;int&amp;gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, 19… ## $ total_litres_of_pure_alcohol &amp;lt;dbl&amp;gt; 0.</description>
     </item>
     
     <item>

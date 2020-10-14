@@ -1,0 +1,187 @@
+---
+title: "Several stocks in China A-share market"
+date: '2020-10-14'
+description: 'Finance data with the tidyquant package'
+draft: no
+image: ashare.jpeg
+keywords: ''
+slug: "pj2"
+categories:
+- ''
+- ''
+---
+
+```{r, setup, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)    # scrape websites
+library(purrr)  
+library(lubridate) #to handle dates
+```
+
+
+# myStocks: get data
+Get stock prices of using `tidyquant` package
+
+```{r tock_data, message=FALSE, warning=FALSE, cache=TRUE}
+myStocks <- c('601318.SS','601899.SS','601998.SS','600600.SS','600016.SS','600332.SS','601992.SS','600085.SS','601811.SS','600754.SS','601111.SS','600585.SS','000063.SZ','002594.SZ','000921.SZ','002202.SZ','002672.SZ','000338.SZ') %>%
+  tq_get(get  = "stock.prices",
+         from = "2015-01-01",
+         to   = "2020-09-30") %>%
+  group_by(symbol) 
+
+glimpse(myStocks) # examine the structure of the resulting data frame
+
+# add names to stocks
+name <- data.frame(name = c('Ping An Insurance','Zijin Mining Group Ltd','China CITIC Bank','Tsingtao Brewery','China Minsheng Bank','Guangzhou Baiyunshan Pharmaceutical Holdings','BBMG Corporation Ltd','Tong Ren Tang','Xinhua Winshare Publishing and Media Co., Ltd','Shanghai Jin Jiang International Hotels','Air China','Anhui Conch Cement','ZTE Corporation','BYD Company','Hisense Kelon Electrical Holdings Company Limited','Xinjiang Goldwind Science & Technology Co., Ltd','Dongjiang Environmental','Weichai Power'), 
+                   symbol = c('601318.SS','601899.SS','601998.SS','600600.SS','600016.SS','600332.SS','601992.SS','600085.SS','601811.SS','600754.SS','601111.SS','600585.SS','000063.SZ','002594.SZ','000921.SZ','002202.SZ','002672.SZ','000338.SZ'))
+
+name$name <- factor(name$name, 
+                    levels = name$name,
+                    ordered = TRUE)
+
+myStocks <- myStocks %>% 
+  left_join(name, by="symbol")
+```
+
+# Transforming the data to include daily, monthly and yearly returns
+```{r calculate_returns, message=FALSE, warning=FALSE, cache=TRUE}
+#calculate daily returns
+myStocks_returns_daily <- myStocks %>%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "daily", 
+               type       = "log",
+               col_rename = "daily.returns",
+               cols = c(nested.col))    %>% 
+  left_join(name, by="symbol")
+
+#calculate monthly  returns
+myStocks_returns_monthly <- myStocks %>%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "monthly", 
+               type       = "arithmetic",
+               col_rename = "monthly.returns",
+               cols = c(nested.col))   %>% 
+  left_join(name, by="symbol")
+
+#calculate yearly returns
+myStocks_returns_annual <- myStocks %>%
+  group_by(symbol) %>%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "yearly", 
+               type       = "arithmetic",
+               col_rename = "yearly.returns",
+               cols = c(nested.col))  %>% 
+  left_join(name, by="symbol")
+```
+
+# Creating a new dataframe for summary statistics for monthly stock returns
+
+```{r summarise_monthly_returns}
+Summary_monthly_returns <- myStocks_returns_monthly %>%
+  summarise(Min=min(monthly.returns), 
+            Max= max(monthly.returns), 
+            Median= median(monthly.returns),
+            Mean= mean(monthly.returns), 
+            Standard_Deviation=sd(monthly.returns))  %>% 
+  left_join(name, by="symbol") %>% 
+  select("name",1:6)
+
+Summary_monthly_returns #view dataframe
+
+```
+
+# Comparing the distribution of monthly returns between various stocks
+
+```{r density_monthly_returns}
+
+ggplot(myStocks_returns_monthly, aes(x=monthly.returns))+
+  geom_density()+
+  facet_wrap(~name)+
+  theme_igray()+
+  labs(x="Monthly Returns", 
+       y="Density", 
+       title = "Charting the Distribution of Monthly Returns")
+
+```
+
+
+**The plots where the peaks are low and spread out over a wide distance are riskier since their monthly returns tend to fluctuate more often between negative and positive and are less likely to be similar over long periods of time. The plots where the peak is high and nearer to positive returns are less risky. Air China appears to be riskiest, followed by Ekectrical Holdings. Banks appears to the least risky.**
+
+# Analyzing the risk vs return
+
+```{r risk_return_plot}
+
+ggplot(Summary_monthly_returns,aes(x=Standard_Deviation,y=Mean))+
+  geom_point()+
+  ggrepel::geom_text_repel(position="identity",label=Summary_monthly_returns$symbol)+
+  theme_solarized()+
+  labs(x="Risk", 
+       y="Expected Monthly Return", 
+       title = "Charting the Risk vs. Expected Return of stocks")
+
+```
+
+# Boxplot of annual returns
+
+```{r}
+myStocks_returns_annual %>% 
+  group_by(name) %>% 
+  mutate(median_return= median(yearly.returns)) %>% 
+
+  # arrange stocks by median yearly return, so highest median return appears first, etc.   
+  ggplot(aes(x=reorder(name, median_return), y=yearly.returns, colour=name)) +
+  geom_boxplot()+
+  coord_flip()+
+  labs(x="Stock", 
+       y="Returns", 
+       title = "Boxplot of Annual Returns")+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 2))+
+  guides(color=FALSE) +
+  theme_bw()+
+  NULL
+```
+
+# Bar plot that shows return for each stock on a year-by-year basis
+```{r}
+ggplot(myStocks_returns_annual, aes(x=year(date), y=yearly.returns, fill=name)) +
+  geom_col(position = "dodge")+
+  labs(x="Year", y="Returns", title = "Annual Returns")+
+  scale_y_continuous(labels = scales::percent)+
+  guides(fill=guide_legend(title=NULL))+
+  theme_bw()+
+  NULL
+```
+
+
+

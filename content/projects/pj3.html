@@ -1,0 +1,53 @@
+---
+title: "Estimating Beta"
+date: '2020-10-14'
+description: ''
+draft: no
+image: CAPM.png
+keywords: ''
+slug: "pj3"
+categories:
+- ''
+- ''
+---
+
+
+
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>beta  &lt;-  read_excel(here::here(&quot;data&quot;,&quot;Problem_Set_4_data.xls&quot;), # Excel filename
+                            sheet=&quot;Question 4&quot;, # Sheet name
+                            skip=2) # Number of rows to skip
+
+beta = beta %&gt;% 
+  rename(&quot;GOOD&quot;=&quot;GOOG...2&quot;,&quot;SPY&quot;=&quot;SPY...3&quot;,&quot;r_GOOG&quot;=&quot;GOOG...4&quot;,&quot;r_SPY&quot;=&quot;SPY...5&quot;,&quot;er_GOOG&quot;=&quot;GOOG...8&quot;,&quot;er_SPY&quot;=&quot;SPY...9&quot;)</code></pre>
+</div>
+<div id="capm-model-plot" class="section level1">
+<h1>CAPM model plot</h1>
+<p><strong>r(GOOG) - rf = beta * (r(SPY) - rf)</strong></p>
+<pre class="r"><code>beta %&gt;% 
+  ggplot(aes(x=er_SPY, y=er_GOOG)) +
+  geom_point()+
+  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = &quot;excess return of SPY&quot;, 
+       y= &quot;excess return of GOOG&quot;, 
+       title= &quot;How is the relationship between Google (GOOG) and S&amp;P 500 ETF (SPY)&quot;)</code></pre>
+<p><img src="/projects/pj3_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="calculate-beta" class="section level1">
+<h1>Calculate beta</h1>
+<pre class="r"><code>#regression
+model_beta=lm(er_GOOG ~ er_SPY, data= beta)
+mosaic::msummary(model_beta)</code></pre>
+<pre><code>##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.00152    0.00185    0.82     0.41    
+## er_SPY       0.94595    0.05803   16.30   &lt;2e-16 ***
+## 
+## Residual standard error: 0.0298 on 259 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.506,  Adjusted R-squared:  0.504 
+## F-statistic:  266 on 1 and 259 DF,  p-value: &lt;2e-16</code></pre>
+<p><strong>From the result of regression, we can see the beta of Google is 0.94595 and the Adjusted R-squared of this model is 0.504.</strong></p>
+</div>

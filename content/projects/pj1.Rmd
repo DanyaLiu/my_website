@@ -1,28 +1,131 @@
 ---
-title: "pj1"
-output: html_document
+title: "Where Do People Drink The Most Beer, Wine And Spirits?"
+date: '2020-10-14'
+description: ''
+draft: no
+image: alcohol02.jpg
+keywords: ''
+slug: "pj1"
+categories:
+- ''
+- ''
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, setup, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)    # scrape websites
+library(purrr)  
+library(lubridate) #to handle dates
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries. The data `drinks` is available as part of the `fivethirtyeight` package. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+```{r, load_alcohol_data}
+library(fivethirtyeight)
+data(drinks)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r glimpse_skim_data}
+
+glimpse(drinks)
+skim(drinks)
+```
+
+
+## Beer Consumption
+
+```{r beer_plot}
+
+drinks %>% 
+  slice_max(n=25,beer_servings) %>% 
+  ggplot(mapping = aes(y = reorder(country,beer_servings), x = beer_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = "Servings of beer",
+    y= "" ,
+    title = "Top 25 beer consuming countries",
+    caption = "Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/"
+    ) + 
+    geom_text(aes(label = beer_servings), vjust=0.5, hjust=1, colour = "white", position = position_dodge(.9), size = 3)
+
+
+```
+
+## Wine Consumption
+
+```{r wine_plot}
+
+drinks %>% 
+  slice_max(n=25,wine_servings) %>% 
+  ggplot(mapping = aes(y = reorder(country,wine_servings), x = wine_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = "Servings of wine",
+    y= "" ,
+    title = "Top 25 wine consuming countries",
+    caption = "Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/"
+    ) + 
+    geom_text(aes(label = wine_servings), vjust=0.5, hjust=1, colour = "white", position = position_dodge(.9), size = 3)
+
+```
+
+## Spirit Consumption
+
+```{r spirit_plot}
+
+drinks %>% 
+  slice_max(n=25,spirit_servings) %>% 
+  ggplot(mapping = aes(y = reorder(country,spirit_servings), x = spirit_servings)) +
+  geom_col()+
+  theme_economist()+
+  labs(
+    x = "Servings of spirit",
+    y= "" ,
+    title = "Top 25 spirit consuming countries",
+    caption = "Source: https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/"
+    ) + 
+    geom_text(aes(label = spirit_servings), vjust=0.5, hjust=1, colour = "white", position = position_dodge(.9), size = 3)
+
+```
+
+## Conclusions
+
+**First of all , the top 5 countries across the three rankings (in total 15 countries) are all different from each other, and the countries that show up in more than one ranking are few and far between. This means that the drinks preference varies wildly across different countries, and usually, one country clearly prefers one kind of drink to others. For instance, beer clearly dominates countries like Germany and Czech Republic, known for their beer production and culture. Wine is also dominated by other European countries, as the top 9 wine consuming countries are European countries. Clearly the French, known for their wine regions such as Bordeaux, Alsace, Burgundy and Champagne, and low wine prices, consume far more wine than people in any other countries, 370 glasses of wine per person per year, 31 glasses more than No.2 country.**
+
+**While looking at the top 25 spirit consuming countries, you find primarily Eastern European countries as well as a at first glance surprising amount of Caribbean countries (Grenada, St Lucia, St Vincent etc.), these are countries known for the production of vodka or rum. The high amount of consumption in Eastern Europe is both as result of a the poorer climate not suitable to grow grapes for example and grounded in the historic aftermath of communism, while the high amount of Caribbean countries might be a result of tourism and consumption of alcoholic beverages by vacationers**
+
+**It is also interesting to consider the range between Top1 and Top25, in beer consumption that gap is smaller than with wine and spirits. This could due to the fact that beer is cheaper per glass and universally produced and consumed around the world.**
+
