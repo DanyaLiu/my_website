@@ -6,41 +6,41 @@
     <description>Recent content in Lifestyle on Portfolio website for Danya</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 31 Oct 2017 22:27:21 -0500</lastBuildDate><atom:link href="/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="/blogs/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Aliquam</title>
-      <link>/blogs/aliquam/</link>
-      <pubDate>Tue, 31 Oct 2017 22:42:51 -0500</pubDate>
+      <title>About me</title>
+      <link>/blogs/blog1/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/aliquam/</guid>
-      <description></description>
+      <guid>/blogs/blog1/</guid>
+      <description>Hello everyone! I am Danya from China. I graduated from Fudan University in Shanghai, China. Currently, I am an MFA student at London Business School. This is my portfolio website and I will upload my recent projects and share my life here! Stay tuned!</description>
     </item>
     
     <item>
-      <title>Tempus</title>
-      <link>/blogs/tempus/</link>
-      <pubDate>Tue, 31 Oct 2017 22:26:13 -0500</pubDate>
+      <title>Lifestyle</title>
+      <link>/blogs/blogs/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/tempus/</guid>
-      <description></description>
+      <guid>/blogs/blogs/</guid>
+      <description>My blogs about technology and lifestyle.</description>
     </item>
     
     <item>
-      <title>Magna</title>
-      <link>/blogs/magna/</link>
-      <pubDate>Tue, 31 Oct 2017 22:26:09 -0500</pubDate>
+      <title>My travel journey of America</title>
+      <link>/blogs/blog3/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/magna/</guid>
-      <description></description>
+      <guid>/blogs/blog3/</guid>
+      <description>In January 2020, I traveled to Los Angeles. I watched a game of the Lakers, which is my favorite NBA team. I am so excited that they just won the champion this week!</description>
     </item>
     
     <item>
-      <title>Ipsum</title>
-      <link>/blogs/ipsum/</link>
-      <pubDate>Tue, 31 Oct 2017 21:28:43 -0500</pubDate>
+      <title>My travel journey of Greece</title>
+      <link>/blogs/blog2/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>/blogs/ipsum/</guid>
-      <description>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna sed nunc rhoncus condimentum sem. In efficitur ligula tate urna. Maecenas massa sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis tempus.</description>
+      <guid>/blogs/blog2/</guid>
+      <description>I spent my summer of 2018 in Greece. I love Athens, Santorini, and Thira. Hope one day I can go there another time!</description>
     </item>
     
   </channel>
